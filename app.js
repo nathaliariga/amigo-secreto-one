@@ -1,13 +1,12 @@
-// 1) Estado: onde os nomes ficam guardados
+// 1) Estado: onde guardamos os nomes
 let amigos = [];
 
 // 2) Adiciona um nome à lista
 function adicionarAmigo() {
-  // pegue o valor do input (ajuste o ID se no seu HTML estiver diferente)
   const input = document.getElementById('amigo');
   const nome = input.value.trim();
 
-  // validação: não aceitar vazio
+  // valida: não aceitar vazio
   if (!nome) {
     alert('Por favor, insira um nome.');
     input.focus();
@@ -17,24 +16,20 @@ function adicionarAmigo() {
   // coloca no array
   amigos.push(nome);
 
-  // limpa e foca de novo
+  // limpa e mantém o foco no campo
   input.value = '';
   input.focus();
 
-  // atualiza a lista visível
+  // atualiza a lista visível e limpa um resultado antigo
   atualizarLista();
+  limparResultado();
 }
 
-// 3) Atualiza a <ul>/<ol> com os nomes do array
+// 3) Renderiza a lista de amigos (ul id="listaAmigos")
 function atualizarLista() {
-  // ⚠️ ATENÇÃO AO ID: no template da Alura às vezes é "listaAmigos" e às vezes "lista-amigos"
-  // Se no seu HTML estiver "lista-amigos", troque abaixo para 'lista-amigos'
-  const lista = document.getElementById('listaAmigos') || document.getElementById('lista-amigos');
+  const lista = document.getElementById('listaAmigos');
+  lista.innerHTML = ''; // evita duplicação
 
-  // garante que não duplique
-  lista.innerHTML = '';
-
-  // cria um <li> para cada nome
   for (let i = 0; i < amigos.length; i++) {
     const li = document.createElement('li');
     li.textContent = amigos[i];
@@ -42,23 +37,31 @@ function atualizarLista() {
   }
 }
 
-// 4) Sorteia um nome aleatório e mostra no elemento de resultado
+// 4) Limpa a ul de resultado (ul id="resultado")
+function limparResultado() {
+  const ulResultado = document.getElementById('resultado');
+  ulResultado.innerHTML = '';
+}
+
+// 5) Sorteia um amigo e mostra como <li> dentro da ul #resultado
 function sortearAmigo() {
   if (amigos.length === 0) {
     alert('Adicione amigos antes de sortear.');
     return;
   }
 
-  // índice aleatório entre 0 e (amigos.length - 1)
   const indice = Math.floor(Math.random() * amigos.length);
   const sorteado = amigos[indice];
 
-  // ⚠️ ATENÇÃO AO ID do resultado: ajuste se no seu HTML for outro
-  const resultado = document.getElementById('resultado');
-  resultado.innerHTML = `Amigo sorteado: <strong>${sorteado}</strong>`;
+  const ulResultado = document.getElementById('resultado');
+  ulResultado.innerHTML = ''; // mostra um resultado por vez
+
+  const li = document.createElement('li');
+  li.innerHTML = `Amigo sorteado: <strong>${sorteado}</strong>`;
+  ulResultado.appendChild(li);
 }
 
-// 5) Se seus botões chamam onclick="adicionarAmigo()" e onclick="sortearAmigo()",
-// essas linhas garantem que as funções fiquem visíveis para o HTML.
+// 6) Deixa as funções acessíveis para os botões com onclick no HTML
 window.adicionarAmigo = adicionarAmigo;
 window.sortearAmigo = sortearAmigo;
+
